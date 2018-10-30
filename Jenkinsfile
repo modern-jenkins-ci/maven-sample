@@ -7,7 +7,7 @@ node('docker') {
     stage('Maven Build') {
         docker.image('maven:3.3-jdk-8').inside {
             sh 'mvn clean package'
-            sh 'ls -al $WORSPACE/target'
+            sh 'ls -al $WORKSPACE/target'
         }
     }
 
