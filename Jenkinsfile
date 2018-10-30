@@ -1,4 +1,4 @@
-node('jenkins') {
+node('docker') {
     stage('Get Latest Code') {
         cleanWs()
         checkout scm
