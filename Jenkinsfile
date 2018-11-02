@@ -26,7 +26,7 @@ node('docker') {
         withEnv(buildEnv) {
             docker.build(
                 "modern-jenkins/maven-sample:${env.BUILD_NUMBER}",
-                "--build-arg GIT_COMMIT=${env.GIT_COMMIT} ."
+                "--build-arg GIT_COMMIT=${env.GIT_COMMIT} --build-arg MAVEN_OPTS=${env.MAVEN_OPTS} ."
             )
         }
     }
