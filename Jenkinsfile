@@ -12,9 +12,22 @@ node('docker') {
     }
 
     stage('Build Docker Image') {
-        docker.build(
-            "modern-jenkins/maven-sample:${env.BUILD_NUMBER}",
-            "--build-arg GIT_COMMIT=${env.GIT_COMMIT} ."
-        )
+        def buildEnv = []
+
+        if(env.http_proxy) {
+            def httpProxyUrl = new URL(env.http_proxy)
+            def proxyHost = httpProxyUrl.host
+            def proxyPort = httpProxyUrl.port
+
+            def javaMavenSettings = "-Dhttp.proxyHost=${proxyHost} -Dhttp.proxyPort=${proxyPort} -Dhttps.proxyHost=${proxyHost} -Dhttps.proxyPort=${proxyPort}"
+            buildEnv = ["MAVEN_OPTS=${javaMavenSettings}"]
+        }
+
+        withEnv(buildEnv) {
+            docker.build(
+                "modern-jenkins/maven-sample:${env.BUILD_NUMBER}",
+                "--build-arg GIT_COMMIT=${env.GIT_COMMIT} ."
+            )
+        }
     }
 }
